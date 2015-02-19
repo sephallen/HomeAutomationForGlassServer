@@ -26,18 +26,20 @@ socket.on('ack button status', function (data) {
     }
 
     if(data.status =='ON'){
-        document.getElementById("lightSwitch").firstChild.data="Turn the light on";
+        document.getElementById("lightSwitch").firstChild.data="Turn on the light";
+        document.getElementById("lightSwitch").className="waves-effect waves-light btn green white-text";
     }else{
-        document.getElementById("lightSwitch").firstChild.data="Turn the light off";
+        document.getElementById("lightSwitch").firstChild.data="Turn off the light";
+        document.getElementById("lightSwitch").className="waves-effect waves-light btn red white-text";
     }
 });
 
 function toggle(button)
 {
- if(document.getElementById("lightSwitch").firstChild.data=="Turn the light off"){
+ if(document.getElementById("lightSwitch").firstChild.data=="Turn off the light"){
   socket.emit('button update event', { status: 'OFF' });
  }
- else if(document.getElementById("lightSwitch").firstChild.data=="Turn the light on"){
+ else if(document.getElementById("lightSwitch").firstChild.data=="Turn on the light"){
   socket.emit('button update event', { status: 'ON' });
  }
 }
