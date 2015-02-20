@@ -5,7 +5,7 @@ var arduino = require('duino')
   , io = require('socket.io').listen(server);
 
 //All clients have a common status
-var status = {light:"ON"};
+var status = {light:"OFF"};
 
 var led = new arduino.Led({
   board: board,
@@ -16,13 +16,13 @@ var app = express();
 var server = http.createServer(app);
 app.get('/lighton', function(req, res) {
   res.send('Light on');
-  status.light = 'OFF';
+  status.light = 'ON';
   led.on();
   io.emit('ack button status', { status: status.light });
 });
 app.get('/lightoff', function(req, res) {
   res.send('Light off');
-  status.light = 'ON';
+  status.light = 'OFF';
   led.off();
   io.emit('ack button status', { status: status.light });
 });
@@ -53,13 +53,13 @@ io.sockets.on('connection', function (socket) {
 
         //acknowledge with inverted status,
         //to toggle button text in client
-        if(data.status == 'ON'){
-            console.log("ON->OFF");
-            status.light = 'OFF';
-            led.on();
-        }else{
+        if(data.status == 'OFF'){
             console.log("OFF->ON");
             status.light = 'ON';
+            led.on();
+        }else{
+            console.log("ON->OFF");
+            status.light = 'OFF';
             led.off();
         }
         io.sockets.emit('ack button status',

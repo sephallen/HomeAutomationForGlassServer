@@ -25,7 +25,7 @@ socket.on('ack button status', function (data) {
         console.log("by: " + data.by);
     }
 
-    if(data.status =='ON'){
+    if(data.status =='OFF'){
         document.getElementById("lightSwitch").firstChild.data="Turn on the light";
         document.getElementById("lightSwitch").className="waves-effect waves-light btn green white-text";
     }else{
@@ -37,9 +37,9 @@ socket.on('ack button status', function (data) {
 function toggle(button)
 {
  if(document.getElementById("lightSwitch").firstChild.data=="Turn off the light"){
-  socket.emit('button update event', { status: 'OFF' });
+  socket.emit('button update event', { status: 'ON' });
  }
  else if(document.getElementById("lightSwitch").firstChild.data=="Turn on the light"){
-  socket.emit('button update event', { status: 'ON' });
+  socket.emit('button update event', { status: 'OFF' });
  }
 }
