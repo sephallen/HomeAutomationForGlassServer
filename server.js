@@ -5,26 +5,29 @@ var arduino = require('duino')
   , io = require('socket.io').listen(server);
 
 //All clients have a common status
-var commonStatus = 'ON';
+var status = {light:"ON"};
 
 var led = new arduino.Led({
   board: board,
-  pin: 12
+  pin: 13
 });
 
 var app = express();
 var server = http.createServer(app);
-app.use('/lighton', function(req, res) {
+app.get('/lighton', function(req, res) {
   res.send('Light on');
-  commonStatus = 'OFF';
+  status.light = 'OFF';
   led.on();
-  io.emit('ack button status', { status: commonStatus });
+  io.emit('ack button status', { status: status.light });
 });
-app.use('/lightoff', function(req, res) {
+app.get('/lightoff', function(req, res) {
   res.send('Light off');
-  commonStatus = 'ON';
+  status.light = 'ON';
   led.off();
-  io.emit('ack button status', { status: commonStatus });
+  io.emit('ack button status', { status: status.light });
+});
+app.get('/json', function(req, res) {
+  res.json(status);
 });
 app.use(express.static('public'));
 server.listen(3000);
@@ -43,7 +46,7 @@ io.sockets.on('connection', function (socket) {
         });
 
     //Set the current common status to the new client
-    socket.emit('ack button status', { status: commonStatus });
+    socket.emit('ack button status', { status: status.light });
 
     socket.on('button update event', function (data) {
         console.log(data.status);
@@ -52,15 +55,15 @@ io.sockets.on('connection', function (socket) {
         //to toggle button text in client
         if(data.status == 'ON'){
             console.log("ON->OFF");
-            commonStatus = 'OFF';
+            status.light = 'OFF';
             led.on();
         }else{
             console.log("OFF->ON");
-            commonStatus = 'ON';
+            status.light = 'ON';
             led.off();
         }
         io.sockets.emit('ack button status',
-            { status: commonStatus,
+            { status: status.light,
               by: socket.id
             });
     });
