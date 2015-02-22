@@ -7,7 +7,7 @@ var arduino = require('johnny-five')
 board.on("ready", function() {
 
   //All clients have a common status
-  var status = {light:"OFF"};
+  var status = {light:"OFF", door:"locked"};
 
   var led = new arduino.Led(13);
 
@@ -58,12 +58,12 @@ board.on("ready", function() {
               console.log("OFF->ON");
               status.light = 'ON';
               led.on();
-              servo.max();
+              // servo.max();
           }else{
               console.log("ON->OFF");
               status.light = 'OFF';
               led.off();
-              servo.min();
+              // servo.min();
           }
           io.sockets.emit('ack button status',
               { status: status.light,
