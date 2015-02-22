@@ -3,13 +3,17 @@
   "version": "0.0.0",
   "description": "Node server for home automation for Glass project.",
   "main": "server.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/sephallen/HomeAutomationForGlassServer.git"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js"
   },
   "author": "Joseph Allen",
   "license": "ISC",
   "dependencies": {
-    "duino": "0.0.9",
+    "duino": "ni-c/duino#master",
     "express": "^4.11.2",
     "socket.io": "^1.3.4"
   }
