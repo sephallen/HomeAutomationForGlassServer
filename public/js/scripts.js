@@ -1,45 +1,50 @@
 var socket = io.connect(document.location.href);
-var myId;
 
 socket.on('on connection', function (data) {
-    console.log("on connection: " + data.client);
-    console.log("Number of client connected: " + data.clientCount);
 });
 
 socket.on('on disconnect',function(data) {
-    console.log("on disconnect: " + data.client);
-    console.log("Number of client connected: " + data.clientCount);
 });
 
 socket.on('your id',function(data) {
-    console.log("your id: " + data.id);
-    myId = data.id;
 });
 
 socket.on('ack button status', function (data) {
-    console.log("status: " + data.status);
+    console.log("statusLight: " + data.statusLight);
+    console.log("statusDoor: " + data.statusDoor);
 
-    if(myId==data.by){
-        console.log("by YOU");
-    }else{
-        console.log("by: " + data.by);
-    }
-
-    if(data.status =='OFF'){
+    if(data.statusLight =='OFF'){
         document.getElementById("lightSwitch").firstChild.data="Turn on the light";
         document.getElementById("lightSwitch").className="waves-effect waves-light btn green white-text";
     }else{
         document.getElementById("lightSwitch").firstChild.data="Turn off the light";
         document.getElementById("lightSwitch").className="waves-effect waves-light btn red white-text";
     }
+    if(data.statusDoor =='locked'){
+        document.getElementById("doorLock").firstChild.data="Unlock the door";
+        document.getElementById("doorLock").className="waves-effect waves-light btn green white-text";
+    }else{
+        document.getElementById("doorLock").firstChild.data="Lock the door";
+        document.getElementById("doorLock").className="waves-effect waves-light btn red white-text";
+    }
 });
 
-function toggle(button)
+function toggleLight(button)
 {
  if(document.getElementById("lightSwitch").firstChild.data=="Turn off the light"){
-  socket.emit('button update event', { status: 'ON' });
+  socket.emit('button update event', { statusLight: 'ON' });
  }
  else if(document.getElementById("lightSwitch").firstChild.data=="Turn on the light"){
-  socket.emit('button update event', { status: 'OFF' });
+  socket.emit('button update event', { statusLight: 'OFF' });
+ }
+}
+
+function toggleLock(button)
+{
+ if(document.getElementById("doorLock").firstChild.data=="Lock the door"){
+  socket.emit('button update event', { statusDoor: 'unlocked' });
+ }
+ else if(document.getElementById("doorLock").firstChild.data=="Unlock the door"){
+  socket.emit('button update event', { statusDoor: 'locked' });
  }
 }
