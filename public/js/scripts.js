@@ -1,4 +1,5 @@
 var socket = io.connect(document.location.href);
+var storedTemp =
 
 socket.on('on connection', function (data) {
 });
@@ -10,20 +11,22 @@ socket.on('your id',function(data) {
 });
 
 socket.on('ack button status', function (data) {
-    console.log("statusLight: " + data.statusLight);
-    console.log("statusDoor: " + data.statusDoor);
+    // console.log("statusLight: " + data.statusLight);
+    // console.log("statusDoor: " + data.statusDoor);
+    // console.log("statusTemp: " + data.statusTemp);
+    document.getElementById("tempDisplay").firstChild.data="The current house temperature is " + data.statusTemp +"°C";
 
-    if(data.statusLight =='OFF'){
+    if(data.statusLight == 'OFF') {
         document.getElementById("lightSwitch").firstChild.data="Turn on the light";
         document.getElementById("lightSwitch").className="waves-effect waves-light btn green white-text";
-    }else{
+    }else if(data.statusLight == 'ON') {
         document.getElementById("lightSwitch").firstChild.data="Turn off the light";
         document.getElementById("lightSwitch").className="waves-effect waves-light btn red white-text";
     }
-    if(data.statusDoor =='locked'){
+    if(data.statusDoor == 'locked'){
         document.getElementById("doorLock").firstChild.data="Unlock the door";
         document.getElementById("doorLock").className="waves-effect waves-light btn green white-text";
-    }else{
+    }else if (data.statusDoor == 'unlocked') {
         document.getElementById("doorLock").firstChild.data="Lock the door";
         document.getElementById("doorLock").className="waves-effect waves-light btn red white-text";
     }

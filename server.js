@@ -6,11 +6,19 @@ var arduino = require('johnny-five')
 
 board.on("ready", function() {
 
-  var status = {light:"OFF", door:"locked"};
+  var status = {light:"OFF", door:"locked", temp:"0"};
 
   var led = new arduino.Led(13);
-
   var servo = new arduino.Servo(9);
+  // Start the servo (lock) at 1 (locked position) servo.min was causing issues
+  servo.to(1);
+  var temperature = new arduino.Temperature({
+    controller: "LM35",
+    pin: "A0"
+  });
+  temperature.on("data", function(err, data) {
+    status.temp = Math.round(data.celsius);
+  });
 
   var app = express();
   var server = http.createServer(app);
@@ -47,43 +55,46 @@ board.on("ready", function() {
 
   io.sockets.on('connection', function (socket) {
 
-      //Set the current common status to the new client
-      socket.emit('ack button status', { statusLight: status.light, statusDoor: status.door });
+    setInterval(function(){
+      socket.emit('ack button status', { statusTemp: status.temp })
+    }, 1000);
 
-      socket.on('button update event', function (data) {
-          // console.log(data.statusLight);
+    //Set the current common status to the new client
+    socket.emit('ack button status', { statusLight: status.light, statusDoor: status.door, statusTemp: status.temp });
 
-          //acknowledge with inverted status,
-          //to toggle button text in client
-          if(data.statusLight == 'OFF') {
-              // console.log("OFF->ON");
-              status.light = 'ON';
-              led.on();
-          } else if(data.statusLight == 'ON') {
-              // console.log("ON->OFF");
-              status.light = 'OFF';
-              led.off();
-          }
-          if(data.statusDoor == 'unlocked') {
-            status.door = 'locked';
-            servo.to(1);
-          } else if(data.statusDoor == 'locked') {
-            status.door = 'unlocked';
-            servo.max();
-          }
-          io.sockets.emit('ack button status',
-              { statusLight: status.light, statusDoor: status.door
-                // by: socket.id
-              });
+    socket.on('button update event', function (data) {
+      // console.log(data.statusLight);
+
+      //acknowledge with inverted status,
+      //to toggle button text in client
+      if(data.statusLight == 'OFF') {
+          // console.log("OFF->ON");
+          status.light = 'ON';
+          led.on();
+      } else if(data.statusLight == 'ON') {
+          // console.log("ON->OFF");
+          status.light = 'OFF';
+          led.off();
+      }
+      if(data.statusDoor == 'unlocked') {
+        status.door = 'locked';
+        servo.to(1);
+      } else if(data.statusDoor == 'locked') {
+        status.door = 'unlocked';
+        servo.max();
+      }
+      io.sockets.emit('ack button status', {
+        statusLight: status.light, statusDoor: status.door, statusTemp : status.temp
       });
+    });
 
-      //Info all clients if this client disconnect
-      socket.on('disconnect', function () {
-          // io.sockets.emit('on disconnect');
-              // { client: socket.id,
-              //   // clientCount: io.sockets.clients().length-1,
-              // });
-      });
+    //Info all clients if this client disconnect
+    socket.on('disconnect', function () {
+        // io.sockets.emit('on disconnect');
+            // { client: socket.id,
+            //   // clientCount: io.sockets.clients().length-1,
+            // });
+    });
   });
 
 });
