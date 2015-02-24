@@ -7,6 +7,9 @@ var arduino = require('johnny-five')
 board.on("ready", function() {
 
   var status = {light:"OFF", door:"locked", temp:"0"};
+  function statusEmit() {
+    io.emit('ack button status', { statusLight: status.light, statusDoor: status.door, statusTemp: status.temp });
+  }
 
   var led = new arduino.Led(13);
   var servo = new arduino.Servo(9);
@@ -26,25 +29,29 @@ board.on("ready", function() {
     res.send('Light on');
     status.light = 'ON';
     led.on();
-    io.emit('ack button status', { statusLight: status.light, statusDoor: status.door });
+    statusEmit();
+    // io.emit('ack button status', statusEmit);
   });
   app.get('/lightoff', function(req, res) {
     res.send('Light off');
     status.light = 'OFF';
     led.off();
-    io.emit('ack button status', { statusLight: status.light, statusDoor: status.door });
+    statusEmit();
+    // io.emit('ack button status', { statusLight: status.light, statusDoor: status.door });
   });
   app.get('/lock', function(req, res) {
     res.send('Door locked');
     status.door = 'locked';
     servo.to(1);
-    io.emit('ack button status', { statusLight: status.light, statusDoor: status.door });
+    statusEmit();
+    // io.emit('ack button status', { statusLight: status.light, statusDoor: status.door });
   });
   app.get('/unlock', function(req, res) {
     res.send('Door unlocked');
     status.door = 'unlocked';
     servo.max();
-    io.emit('ack button status', { statusLight: status.light, statusDoor: status.door });
+    statusEmit();
+    // io.emit('ack button status', { statusLight: status.light, statusDoor: status.door });
   });
   app.get('/json', function(req, res) {
     res.json(status);
@@ -60,7 +67,8 @@ board.on("ready", function() {
     }, 1000);
 
     //Set the current common status to the new client
-    socket.emit('ack button status', { statusLight: status.light, statusDoor: status.door, statusTemp: status.temp });
+    statusEmit();
+    // socket.emit('ack button status', { statusLight: status.light, statusDoor: status.door, statusTemp: status.temp });
 
     socket.on('button update event', function (data) {
       // console.log(data.statusLight);
@@ -83,9 +91,10 @@ board.on("ready", function() {
         status.door = 'unlocked';
         servo.max();
       }
-      io.sockets.emit('ack button status', {
-        statusLight: status.light, statusDoor: status.door, statusTemp : status.temp
-      });
+      statusEmit();
+      // io.sockets.emit('ack button status', {
+      //   statusLight: status.light, statusDoor: status.door, statusTemp : status.temp
+      // });
     });
 
     //Info all clients if this client disconnect
