@@ -1,3 +1,12 @@
 .card {
   min-height: 268px;
 }
+
+.card .card-action {
+  border-top: 0;
+}
+
+.card .card-content {
+  background-color: #f5f5f5;
+  min-height: 175px;
+}
