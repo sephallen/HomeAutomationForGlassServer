@@ -23,6 +23,7 @@ socket.on('ack button status', function (data) {
     }
 
     document.getElementById("tempDisplay").firstChild.data="The current house temperature is " + data.statusTemp +"°C";
+    document.getElementById("thermTempDisplay").firstChild.data = document.getElementById("thermSlider").value + "°C";
 
     if(data.statusLight == 'OFF') {
         document.getElementById("lightSwitch").firstChild.data = "Turn on the light";
