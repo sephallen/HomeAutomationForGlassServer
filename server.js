@@ -16,7 +16,7 @@ board.on("ready", function() {
   var led = new arduino.Led(13);
   var servo = new arduino.Servo(9);
   // Start the servo (lock) at 1 (locked position) servo.min was causing issues
-  servo.to(10);
+  servo.to(20);
   // servo.min();
   var temperature = new arduino.Temperature({
     controller: "LM35",
@@ -43,13 +43,13 @@ board.on("ready", function() {
   var app = express();
   var server = http.createServer(app);
   app.get('/lighton', function(req, res) {
-    res.send('Light on');
+    res.send('Light turned on');
     status.light = 'ON';
     led.on();
     statusEmit();
   });
   app.get('/lightoff', function(req, res) {
-    res.send('Light off');
+    res.send('Light turned off');
     status.light = 'OFF';
     led.off();
     statusEmit();
@@ -57,7 +57,7 @@ board.on("ready", function() {
   app.get('/lock', function(req, res) {
     res.send('Door locked');
     status.door = 'locked';
-    servo.to(10);
+    servo.to(20);
     // servo.min();
     statusEmit();
   });
@@ -70,7 +70,7 @@ board.on("ready", function() {
   app.get('/thermostat/:thermTemp', function(req, res) {
     var newThermTemp = req.params.thermTemp;
     if (newThermTemp >= 0 && newThermTemp <= 30) {
-      res.send('The new thermostat temperature is ' + newThermTemp);
+      res.send('The thermostat temperature is ' + newThermTemp);
       status.thermostat = newThermTemp;
       printLCD();
       statusEmit();
@@ -111,7 +111,7 @@ board.on("ready", function() {
       }
       if(data.statusDoor == 'unlocked') {
         status.door = 'locked';
-        servo.to(10);
+        servo.to(20);
       } else if(data.statusDoor == 'locked') {
         status.door = 'unlocked';
         servo.max();
