@@ -8,6 +8,12 @@ nav .brand-logo {
   font-weight: 300;
   text-align: left;
   position: inherit;
+  padding: 0 0.75rem;
+}
+
+.devices {
+  margin-top: 1.32rem;
+  padding: 0 0.75rem;
 }
 
 h5 {
