@@ -16,8 +16,8 @@ board.on("ready", function() {
   var led = new arduino.Led(13);
   var servo = new arduino.Servo(9);
   // Start the servo (lock) at 1 (locked position) servo.min was causing issues
-  servo.to(20);
-  // servo.min();
+  // servo.to(20);
+  servo.min();
   var temperature = new arduino.Temperature({
     controller: "LM35",
     pin: "A0"
@@ -57,8 +57,8 @@ board.on("ready", function() {
   app.get('/lock', function(req, res) {
     res.send('Door locked');
     status.door = 'locked';
-    servo.to(20);
-    // servo.min();
+    // servo.to(20);
+    servo.min();
     statusEmit();
   });
   app.get('/unlock', function(req, res) {
@@ -111,7 +111,8 @@ board.on("ready", function() {
       }
       if(data.statusDoor == 'unlocked') {
         status.door = 'locked';
-        servo.to(20);
+        // servo.to(20);
+        servo.min();
       } else if(data.statusDoor == 'locked') {
         status.door = 'unlocked';
         servo.max();
