@@ -6,11 +6,11 @@ var arduino = require('johnny-five')
 
 board.on("ready", function() {
 
-  var status = {light:"OFF", door:"locked", temp:"0", thermostat:"0"};
+  var status = {light:"OFF", door:"locked", temp:"0", thermostat:"0", relay:"off"};
 
   function statusEmit() {
     io.emit('ack button status', { statusLight: status.light, statusDoor: status.door, statusTemp: status.temp,
-    statusThermostat: status.thermostat });
+    statusThermostat: status.thermostat, statusRelay: status.relay });
   }
 
   var led = new arduino.Led(13);
@@ -32,12 +32,15 @@ board.on("ready", function() {
     rows: 2,
     cols: 16
   });
+  var relay = new arduino.Relay(10);
+
   function printLCD() {
     lcd.clear().cursor(0, 0);
     lcd.print("Thermostat");
     lcd.cursor(1, 0);
     lcd.print("temperature: " + status.thermostat + "C");
   }
+
   printLCD();
 
   var app = express();
@@ -78,6 +81,18 @@ board.on("ready", function() {
       res.send(newThermTemp + ' is not a valid temperature');
     }
   });
+  app.get('/relayon', function(req, res) {
+    res.send('Kettle turned on');
+    status.relay = 'on';
+    relay.on();
+    statusEmit();
+  });
+  app.get('/relayoff', function(req, res) {
+    res.send('Kettle turned off');
+    status.relay = 'off';
+    relay.off();
+    statusEmit();
+  });
   app.get('/json', function(req, res) {
     res.json(status);
   });
@@ -88,12 +103,8 @@ board.on("ready", function() {
   io.sockets.on('connection', function (socket) {
 
     setInterval(function(){
-      // socket.emit('ack button status', { statusTemp: status.temp, statusThermostat: status.thermostat })
       statusEmit();
     }, 1000);
-
-    //Set the current common status to the new client
-    // socket.emit('ack button status', { statusLight: status.light, statusDoor: status.door, statusTemp: status.temp });
 
     socket.on('button update event', function (data) {
       // console.log(data.statusLight);
@@ -117,6 +128,15 @@ board.on("ready", function() {
         status.door = 'unlocked';
         servo.max();
       }
+      if(data.statusRelay == 'off') {
+          // console.log("OFF->ON");
+          status.relay = 'on';
+          relay.on();
+      } else if(data.statusRelay == 'on') {
+          // console.log("ON->OFF");
+          status.relay = 'off';
+          relay.off();
+      }
 
       if (data.statusThermostat != status.thermostat && data.statusThermostat != null) {
         status.thermostat = data.statusThermostat;
@@ -132,6 +152,10 @@ board.on("ready", function() {
             //   // clientCount: io.sockets.clients().length-1,
             // });
     });
+  });
+
+  this.repl.inject({
+    relay: relay
   });
 
 });
