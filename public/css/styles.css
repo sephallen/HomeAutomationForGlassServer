@@ -23,12 +23,21 @@ h5 {
 
 .card .card-action {
   border-top: 0;
-  min-height: 114px;
+  height: 50%;
+  /*min-height: 114px;*/
 }
 
 .card .card-content {
   background-color: #f5f5f5;
-  max-height: 175px;
+  /*max-height: 175px;*/
+}
+
+.card a {
+  margin: 0;
+}
+
+.slider-form {
+  width: 100%;
 }
 
 .btn {

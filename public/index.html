@@ -23,43 +23,43 @@
       <div class="row">
         <h5 class="grey-text text-darken-1 devices">Devices</h5>
         <div class="col s12 m6 l3">
-          <div class="card grey lighten-5">
-            <div class="card-content grey-text text-darken-1 center-align">
+          <div class="card small grey lighten-5">
+            <div class="card-content grey-text text-darken-1 center-align valign-wrapper">
               <i class="large mdi-communication-vpn-key"></i>
             </div>
-            <div class="card-action center-align">
+            <div class="card-action center-align valign-wrapper">
               <a id="doorLock" class="waves-effect waves-light btn green white-text" onclick="toggleLock(this);">Unlock the door</a>
             </div>
           </div>
         </div>
         <div class="col s12 m6 l3">
-          <div class="card grey lighten-5">
-            <div class="card-content grey-text text-darken-1 center-align">
+          <div class="card small grey lighten-5">
+            <div class="card-content grey-text text-darken-1 center-align valign-wrapper">
               <i class="large mdi-image-wb-incandescent"></i>
             </div>
-            <div class="card-action center-align">
+            <div class="card-action center-align valign-wrapper">
               <a id="lightSwitch" class="waves-effect waves-light btn green white-text" onclick="toggleLight(this);">Turn on the light</a>
             </div>
           </div>
         </div>
         <div class="col s12 m6 l3">
-          <div class="card grey lighten-5">
-            <div class="card-content grey-text text-darken-1 center-align">
+          <div class="card small grey lighten-5">
+            <div class="card-content grey-text text-darken-1 center-align valign-wrapper">
               <i class="large mdi-social-whatshot"></i>
             </div>
-            <div class="card-action center-align">
+            <div class="card-action center-align valign-wrapper">
               <p id="tempDisplay">The current house temperature is -°C</p>
             </div>
           </div>
         </div>
         <div class="col s12 m6 l3">
-          <div class="card grey lighten-5">
+          <div class="card small grey lighten-5">
             <div class="card-content grey-text text-darken-1 center-align">
               <h5>Thermostat temperature</h5>
               <h3 id="thermTempDisplay">0°C</h3>
             </div>
-            <div class="card-action center-align">
-              <form action="#">
+            <div class="card-action center-align valign-wrapper">
+              <form class="slider-form" action="#">
                 <p class="range-field">
                   <input type="range" id="thermSlider" min="0" max="30" value="0" />
               </form>
