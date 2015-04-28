@@ -39,13 +39,13 @@ socket.on('ack button status', function (data) {
         document.getElementById("doorLock").firstChild.data = "Lock the door";
         document.getElementById("doorLock").className = "waves-effect waves-light btn red white-text";
     }
-    if(data.statusRelay == 'off'){
-        document.getElementById("relay").firstChild.data = "Turn on the kettle";
-        document.getElementById("relay").className = "waves-effect waves-light btn green white-text";
-    }else if (data.statusRelay == 'on') {
-        document.getElementById("relay").firstChild.data = "Turn off the kettle";
-        document.getElementById("relay").className = "waves-effect waves-light btn red white-text";
-    }
+    // if(data.statusRelay == 'off'){
+    //     document.getElementById("relay").firstChild.data = "Turn on the kettle";
+    //     document.getElementById("relay").className = "waves-effect waves-light btn green white-text";
+    // }else if (data.statusRelay == 'on') {
+    //     document.getElementById("relay").firstChild.data = "Turn off the kettle";
+    //     document.getElementById("relay").className = "waves-effect waves-light btn red white-text";
+    // }
 });
 
 function toggleLight(button)
@@ -68,12 +68,12 @@ function toggleLock(button)
  }
 }
 
-function toggleRelay(button)
-{
- if(document.getElementById("relay").firstChild.data == "Turn off the kettle"){
-  socket.emit('button update event', { statusRelay: 'on' });
- }
- else if(document.getElementById("relay").firstChild.data == "Turn on the kettle"){
-  socket.emit('button update event', { statusRelay: 'off' });
- }
-}
+// function toggleRelay(button)
+// {
+//  if(document.getElementById("relay").firstChild.data == "Turn off the kettle"){
+//   socket.emit('button update event', { statusRelay: 'on' });
+//  }
+//  else if(document.getElementById("relay").firstChild.data == "Turn on the kettle"){
+//   socket.emit('button update event', { statusRelay: 'off' });
+//  }
+// }

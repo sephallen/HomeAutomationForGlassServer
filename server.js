@@ -15,8 +15,6 @@ board.on("ready", function() {
 
   var led = new arduino.Led(13);
   var servo = new arduino.Servo(9);
-  // Start the servo (lock) at 1 (locked position) servo.min was causing issues
-  // servo.to(20);
   servo.min();
   var temperature = new arduino.Temperature({
     controller: "LM35",
@@ -32,7 +30,7 @@ board.on("ready", function() {
     rows: 2,
     cols: 16
   });
-  var relay = new arduino.Relay(10);
+  // var relay = new arduino.Relay(10);
 
   function printLCD() {
     lcd.clear().cursor(0, 0);
@@ -60,7 +58,6 @@ board.on("ready", function() {
   app.get('/lock', function(req, res) {
     res.send('Door locked');
     status.door = 'locked';
-    // servo.to(20);
     servo.min();
     statusEmit();
   });
@@ -128,15 +125,15 @@ board.on("ready", function() {
         status.door = 'unlocked';
         servo.max();
       }
-      if(data.statusRelay == 'off') {
-          // console.log("OFF->ON");
-          status.relay = 'on';
-          relay.on();
-      } else if(data.statusRelay == 'on') {
-          // console.log("ON->OFF");
-          status.relay = 'off';
-          relay.off();
-      }
+      // if(data.statusRelay == 'off') {
+      //     // console.log("OFF->ON");
+      //     status.relay = 'on';
+      //     relay.on();
+      // } else if(data.statusRelay == 'on') {
+      //     // console.log("ON->OFF");
+      //     status.relay = 'off';
+      //     relay.off();
+      // }
 
       if (data.statusThermostat != status.thermostat && data.statusThermostat != null) {
         status.thermostat = data.statusThermostat;
@@ -154,8 +151,8 @@ board.on("ready", function() {
     });
   });
 
-  this.repl.inject({
-    relay: relay
-  });
+  // this.repl.inject({
+  //   relay: relay
+  // });
 
 });
